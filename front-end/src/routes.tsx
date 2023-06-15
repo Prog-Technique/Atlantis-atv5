@@ -1,21 +1,20 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import Home from './pages/Sozinhos/home';
+import Home from './pages/home';
 
-import Titulares from './pages/CadastraCliente/Titulares';
-import Dependentes from './pages/CadastraCliente/Dependentes';
+import Clientes from './pages/Cliente/listagem';
+import CadastrarClientes from './pages/Cliente/Cadastrar/titular';
+import VerCliente from './pages/Cliente/VerEditar/titular';
 
-import Acomodacao from './pages/Sozinhos/cadastraAcomodacao';
-import VinculaHospedeQuarto from './pages/Sozinhos/vincula';
+import CadastrarAcomodacoes from './pages/Acomodacao/acomodacoes';
+import Acomodacoes from './pages/Acomodacao/listagem';
+import AcomodacaoVazia from './pages/Ver/alocacao/acomodacaoVazia';
 
-import Titular from './pages/Listagens/listaTitular';
-import EditarCliente from './component/VerEditar/titular';
-import ModalDelTitular from './component/ModalDeletar/titular';
+import Alocar from './pages/Ver/alocacao/acomodacaoVazia/alocar';
+import Desalocar from './pages/Ver/alocacao/acomodacaoVazia/desalocar';
 
-import Dependente from './pages/Listagens/listaDependentes';
-import Acomodacoes from './pages/Listagens/acomodacoes';
-import VerEditarAcomodacao from './component/VerEditar/acomodacao';
-import ModalDelAcomodacao from './component/ModalDeletar/acomodacao';
+import AddDependentes from './pages/Cliente/Cadastrar/dependente';
+import EditarDependentes from './pages/Cliente/VerEditar/dependente';
 
 import './index.css';
 
@@ -23,24 +22,18 @@ export default function RoutesApp() {
     return (
         <Router>
             <Routes>
-                <Route path='/' element={<Home />} />
+                <Route path='/' element={<Home/>}/>
+                <Route path='/clientes' element={<Clientes/>}/>
+                <Route path='/cadastrar/clientes' element={<CadastrarClientes/>}/>
+                <Route path='/cadastrar/acomodacoes' element={<CadastrarAcomodacoes/>}/>
+                <Route path='/cadastrar/dependentes' element={<AddDependentes/>}/>
+                <Route path='/acomodacoes' element={<Acomodacoes/>}/>
 
-                <Route path='/cadastrar_cliente' element={<Titulares />} />
-                <Route path='/cadastrar_cliente/dependentes' element={<Dependentes />} />
-                
-                <Route path='/cadastrar_acomodacao' element={<Acomodacao />} />
-                <Route path='/vincular' element={<VinculaHospedeQuarto />} />
-
-                <Route path='/titular' element={<Titular />} />
-                <Route path='/editar_cliente/1' element={<EditarCliente />} />
-                <Route path='/deletar_cliente/1' element={<ModalDelTitular />} />
-                
-                <Route path='/dependente' element={<Dependente />} />
-                
-                <Route path='/acomodacoes' element={<Acomodacoes />} />
-                <Route path='/ver_editar_acomodacao' element={<VerEditarAcomodacao />} />
-                <Route path='/deletar_acomodacao' element={<ModalDelAcomodacao />} />
-                
+                <Route path='/ver/cliente' element={<VerCliente/>}/>
+                <Route path='/ver/dependentes' element={<EditarDependentes/>}/>
+                <Route path='/alocar' element={<Alocar/>}/>
+                <Route path='/acomodacoes_disponiveis' element={<AcomodacaoVazia/>}/>
+                <Route path='/desalocar' element={<Desalocar/>}/>
             </Routes>
         </Router>
     );

@@ -13,7 +13,7 @@ const client = new cassandra.Client({
 });
 
 async function criarTabelaClientes() {
-  const query = "CREATE TABLE IF NOT EXISTS atlantis.clientes (id uuid PRIMARY KEY, nome text, nome_social text, nascimento date, cadastro date, titular boolean);";
+  const query = "CREATE TABLE IF NOT EXISTS atlantis.clientes (id uuid PRIMARY KEY, nome text, nome_social text, nascimento date, cpf text, passaporte text, titular boolean);";
   return client.execute(query);
 }
 
@@ -43,7 +43,7 @@ async function criarIndiceClienteIdDependente() {
 }
 
 async function criarTabelaTelefones() {
-  const query = "CREATE TABLE IF NOT EXISTS atlantis.telefones (id uuid PRIMARY KEY, numero text);";
+  const query = "CREATE TABLE IF NOT EXISTS atlantis.telefones (id uuid PRIMARY KEY, ddd text, numero text);";
   return client.execute(query);
 }
 
@@ -62,23 +62,23 @@ async function criarIndiceClienteIdTelefone() {
   return client.execute(query);
 }
 
-async function criarTabelaDocs() {
-  const query = "CREATE TABLE IF NOT EXISTS atlantis.docs (id uuid PRIMARY KEY, tipo text, numero text, emissao date);";
+async function criarTabelaRgs() {
+  const query = "CREATE TABLE IF NOT EXISTS atlantis.rgs (id uuid PRIMARY KEY, numero text, emissao date);";
   return client.execute(query);
 }
 
-async function criarTabelaClienteDoc() {
-  const query = "CREATE TABLE IF NOT EXISTS atlantis.cliente_doc (id uuid PRIMARY KEY, id_cliente uuid, id_doc uuid);";
+async function criarTabelaClienteRg() {
+  const query = "CREATE TABLE IF NOT EXISTS atlantis.cliente_rg (id uuid PRIMARY KEY, id_cliente uuid, id_rg uuid);";
   return client.execute(query);
 }
 
-async function criarIndiceIdClienteDoc() {
-  const query = "CREATE INDEX IF NOT EXISTS id_cliente_cli_doc ON atlantis.cliente_doc (id_cliente);";
+async function criarIndiceIdClienteRg() {
+  const query = "CREATE INDEX IF NOT EXISTS id_cliente_cli_rg ON atlantis.cliente_rg (id_cliente);";
   return client.execute(query);
 }
 
-async function criarIndiceClienteIdDoc() {
-  const query = "CREATE INDEX IF NOT EXISTS id_doc_cli_doc ON atlantis.cliente_doc (id_doc);";
+async function criarIndiceClienteIdRg() {
+  const query = "CREATE INDEX IF NOT EXISTS id_rg_cli_rg ON atlantis.cliente_rg (id_rg);";
   return client.execute(query);
 }
 
@@ -98,11 +98,11 @@ async function criarIndiceIdClienteAlocado() {
 }
 
 const id = uuidv4();
-async function inserirUsuario(nome, nomeSocial, nascimento, cadastro, docs, telefones, dependentes, endereco) {
+async function inserirUsuario(nome, nomeSocial, nascimento, cpf, passaporte, rgs, telefones, dependentes, endereco) {
   // const id = uuidv4();
 
-  const queryInserirCliente = 'INSERT INTO atlantis.clientes (id, nome, nome_social, nascimento, cadastro, titular) VALUES (?, ?, ?, ?, ?, ?)';
-  const parametrosCliente = [id, nome, nomeSocial, nascimento, cadastro, true];
+  const queryInserirCliente = 'INSERT INTO atlantis.clientes (id, nome, nome_social, nascimento, cpf, passaporte, titular) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const parametrosCliente = [id, nome, nomeSocial, nascimento, cpf, passaporte, true];
   await client.execute(queryInserirCliente, parametrosCliente, { prepare: true });
 
   const enderecoId = uuidv4();
@@ -110,21 +110,21 @@ async function inserirUsuario(nome, nomeSocial, nascimento, cadastro, docs, tele
   const parametrosEndereco = [enderecoId, id, endereco.cep, endereco.numero, endereco.locadouro, endereco.cidade, endereco.estado, endereco.pais, endereco.bairro];
   await client.execute(queryInserirEndereco, parametrosEndereco, { prepare: true });  
 
-  for (const doc of docs) {
-    const docId = uuidv4();
-    const queryInserirDoc = 'INSERT INTO atlantis.docs (id, tipo, numero, emissao) VALUES (?, ?, ?, ?)';
-    const parametrosDoc = [docId, doc.numero, doc.emissao];
-    await client.execute(queryInserirDoc, parametrosDoc, { prepare: true });
+  for (const rg of rgs) {
+    const rgId = uuidv4();
+    const queryInserirRg = 'INSERT INTO atlantis.rgs (id, numero, emissao) VALUES (?, ?, ?)';
+    const parametrosRg = [rgId, rg.numero, rg.emissao];
+    await client.execute(queryInserirRg, parametrosRg, { prepare: true });
 
-    const queryInserirClienteDoc = 'INSERT INTO atlantis.cliente_doc (id, id_cliente, id_doc) VALUES (?, ?, ?)';
-    const parametrosClienteDoc = [uuidv4(), id, docId];
-    await client.execute(queryInserirClienteDoc, parametrosClienteDoc, { prepare: true });
+    const queryInserirClienteRg = 'INSERT INTO atlantis.cliente_rg (id, id_cliente, id_rg) VALUES (?, ?, ?)';
+    const parametrosClienteRg = [uuidv4(), id, rgId];
+    await client.execute(queryInserirClienteRg, parametrosClienteRg, { prepare: true });
   }
 
   for (const telefone of telefones) {
     const telefoneId = uuidv4();
-    const queryInserirTelefone = 'INSERT INTO atlantis.telefones (id, numero) VALUES (?, ?)';
-    const parametrosTelefone = [telefoneId, telefone.numero];
+    const queryInserirTelefone = 'INSERT INTO atlantis.telefones (id, ddd, numero) VALUES (?, ?, ?)';
+    const parametrosTelefone = [telefoneId, telefone.ddd, telefone.numero];
     await client.execute(queryInserirTelefone, parametrosTelefone, { prepare: true });
 
     const queryInserirClienteTelefone = 'INSERT INTO atlantis.cliente_telefone (id, id_cliente, id_telefone) VALUES (?, ?, ?)';
@@ -134,8 +134,8 @@ async function inserirUsuario(nome, nomeSocial, nascimento, cadastro, docs, tele
 
   for (const dependente of dependentes) {
     const dependenteId = uuidv4();
-    const queryInserirDependente = 'INSERT INTO atlantis.clientes (id, nome, nome_social, nascimento, cadastro, titular) VALUES (?, ?, ?, ?, ?, ?)';
-    const parametrosDependente = [dependenteId, dependente.nome, dependente.nomeSocial, dependente.nascimento, dependente.cadastro, false];
+    const queryInserirDependente = 'INSERT INTO atlantis.clientes (id, nome, nome_social, nascimento, cpf, passaporte, titular) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const parametrosDependente = [dependenteId, dependente.nome, dependente.nomeSocial, dependente.nascimento, dependente.cpf, dependente.passaporte, false];
     await client.execute(queryInserirDependente, parametrosDependente, { prepare: true });
 
     const queryInserirClienteDependente = 'INSERT INTO atlantis.cliente_dependente (id, id_cliente, id_dependente) VALUES (?, ?, ?)';
@@ -144,31 +144,47 @@ async function inserirUsuario(nome, nomeSocial, nascimento, cadastro, docs, tele
   }
 }
 
-async function selecionarDoc(id) {
-  const querySelecionarDoc = `
-  SELECT id, tipo, numero, emissao
-  FROM atlantis.docs
-  WHERE id = ? `;
+async function selecionarRg(id) {
+  const querySelecionarRg = `
+  SELECT
+    id,
+    numero, 
+    emissao
+  FROM
+    atlantis.rgs
+  WHERE
+    id = ?
+  `;
   const parametros = [id];
-  const resultado = await client.execute(querySelecionarDoc, parametros, { prepare: true });
+  const resultado = await client.execute(querySelecionarRg, parametros, { prepare: true });
   return resultado;
 }
 
-async function selecionarClienteDoc(id) {
-  const querySelecionarClienteDoc = `
-  SELECT id_doc
-  FROM atlantis.cliente_doc
-  WHERE id_cliente = ? `;
+async function selecionarClienteRg(id) {
+  const querySelecionarClienteRg = `
+  SELECT
+    id_rg
+  FROM
+    atlantis.cliente_rg
+  WHERE
+    id_cliente = ?
+  `;
   const parametros = [id];
-  const resultado = await client.execute(querySelecionarClienteDoc, parametros, { prepare: true });
+  const resultado = await client.execute(querySelecionarClienteRg, parametros, { prepare: true });
   return resultado;
 }
 
 async function selecionarTelefone(id) {
   const querySelecionarTelefone = `
-  SELECT id, numero
-  FROM atlantis.telefones
-  WHERE id = ? `;
+  SELECT
+    id,
+    ddd,
+    numero
+  FROM
+    atlantis.telefones
+  WHERE
+    id = ?
+  `;
   const parametros = [id];
   const resultado = await client.execute(querySelecionarTelefone, parametros, { prepare: true });
   return resultado;
@@ -176,9 +192,13 @@ async function selecionarTelefone(id) {
 
 async function selecionarClienteTelefone(id) {
   const querySelecionarClienteTelefone = `
-  SELECT id_telefone
-  FROM atlantis.cliente_telefone
-  WHERE id_cliente = ? `;
+  SELECT
+    id_telefone
+  FROM
+    atlantis.cliente_telefone
+  WHERE
+    id_cliente = ?
+  `;
   const parametros = [id];
   const resultado = await client.execute(querySelecionarClienteTelefone, parametros, { prepare: true });
   return resultado;
@@ -187,10 +207,17 @@ async function selecionarClienteTelefone(id) {
 async function selecionarDependente(id) {
   const querySelecionarDependente = `
   SELECT
-    id, nome, nome_social,
-    nascimento, cadastro
-  FROM atlantis.clientes
-  WHERE id = ? `;
+    id,
+    nome,
+    nome_social,
+    nascimento,
+    cpf,
+    passaporte
+  FROM
+    atlantis.clientes
+  WHERE
+    id = ?
+  `;
   const parametros = [id];
   const resultado = await client.execute(querySelecionarDependente, parametros, { prepare: true });
   return resultado;
@@ -198,8 +225,13 @@ async function selecionarDependente(id) {
 
 async function selecionarEndereco(id) {
   const querySelecionarEndereco = `
-  SELECT * FROM atlantis.endereco
-  WHERE id_cliente = ? `;
+  SELECT
+    *
+  FROM
+    atlantis.endereco
+  WHERE
+    id_cliente = ?
+  `;
 
   const parametros = [id];
   const resultado = await client.execute(querySelecionarEndereco, parametros, { prepare: true });
@@ -233,7 +265,8 @@ async function selectCliente(id) {
     nome,
     nome_social,
     nascimento,
-    cadastro,
+    cpf,
+    passaporte,
     titular
   FROM
     atlantis.clientes
@@ -255,21 +288,22 @@ async function clienteCompleto(id) {
     usuario.nome = usuarioOld.nome;
     usuario.nome_social = usuarioOld.nome_social;
     usuario.nascimento = usuarioOld.nascimento.toString();
-    usuario.cadastro = usuarioOld.cadastro.toString();
+    usuario.cpf = usuarioOld.cpf;
+    usuario.passaporte = usuarioOld.passaporte;
 
-    const [resultadoIdDocs, resultadoIdTelefones, resultadoIdDependentes] = await Promise.all([
-      selecionarClienteDoc(id),
+    const [resultadoIdRgs, resultadoIdTelefones, resultadoIdDependentes] = await Promise.all([
+      selecionarClienteRg(id),
       selecionarClienteTelefone(id),
       selecionarClienteDependente(id)
     ]);
 
-    if (resultadoIdDocs && resultadoIdDocs.rowLength > 0) {
-      const docsArray = await Promise.all(resultadoIdDocs.rows.map(async (row) => {
-        const idDoc = row.id_doc;
-        const resultadoDoc = await selecionarDoc(idDoc);
-        return resultadoDoc.first();
+    if (resultadoIdRgs && resultadoIdRgs.rowLength > 0) {
+      const rgsArray = await Promise.all(resultadoIdRgs.rows.map(async (row) => {
+        const idRg = row.id_rg;
+        const resultadoRg = await selecionarRg(idRg);
+        return resultadoRg.first();
       }));
-      usuario.docs = docsArray.map((doc) => ({ id: doc.id, tipo: doc.tipo, numero: doc.numero, emissao: doc.emissao.toString() }));
+      usuario.rgs = rgsArray.map((rg) => ({ id: rg.id, numero: rg.numero, emissao: rg.emissao.toString() }));
     }
 
     if (resultadoIdTelefones && resultadoIdTelefones.rowLength > 0) {
@@ -293,7 +327,8 @@ async function clienteCompleto(id) {
           nome: dependente.nome,
           nome_social: dependente.nome_social,
           nascimento: dependente.nascimento.toString(),
-          cadastro: dependente.cadastro.toString()
+          cpf: dependente.cpf,
+          passaporte: dependente.passaporte
         }));
       }
     }
@@ -316,40 +351,40 @@ async function clienteCompleto(id) {
   return usuario;
 }
 
-async function atualizarCliente(id, nome, nomeSocial, nascimento, cadastro, docs, telefones, dependentes, endereco) {
+async function atualizarCliente(id, nome, nomeSocial, nascimento, cpf, passaporte, rgs, telefones, dependentes, endereco) {
   const queryAtualizarCliente = `
     UPDATE atlantis.clientes
-    SET nome = ?, nome_social = ?, nascimento = ?, cadastro = ?
+    SET nome = ?, nome_social = ?, nascimento = ?, cpf = ?, passaporte = ?
     WHERE id = ?
   `;
-  const parametrosCliente = [nome, nomeSocial, nascimento, cadastro, id];
+  const parametrosCliente = [nome, nomeSocial, nascimento, cpf, passaporte, id];
   await client.execute(queryAtualizarCliente, parametrosCliente, { prepare: true });
 
-  if (docs != undefined) {
-    for (const doc of docs) {
-      if (doc.id) {
-        const queryAtualizarDoc = `
-          UPDATE atlantis.docs
-          SET tipo = ?, numero = ?, emissao = ?
+  if (rgs != undefined) {
+    for (const rg of rgs) {
+      if (rg.id) {
+        const queryAtualizarRg = `
+          UPDATE atlantis.rgs
+          SET numero = ?, emissao = ?
           WHERE id = ?
         `;
-        const parametrosDoc = [doc.numero, doc.emissao, doc.id];
-        await client.execute(queryAtualizarDoc, parametrosDoc, { prepare: true });
+        const parametrosRg = [rg.numero, rg.emissao, rg.id];
+        await client.execute(queryAtualizarRg, parametrosRg, { prepare: true });
       } else {
-        const docId = uuidv4();
-        const queryInserirDoc = `
-          INSERT INTO atlantis.docs (id, tipo, numero, emissao)
-          VALUES (?, ?, ?, ?)
-        `;
-        const parametrosInserirDoc = [docId, doc.tipo, doc.numero, doc.emissao];
-        await client.execute(queryInserirDoc, parametrosInserirDoc, { prepare: true });
-  
-        const queryInserirClienteDoc = `
-          INSERT INTO atlantis.cliente_doc (id, id_cliente, id_doc)
+        const rgId = uuidv4();
+        const queryInserirRg = `
+          INSERT INTO atlantis.rgs (id, numero, emissao)
           VALUES (?, ?, ?)
         `;
-        const parametrosClienteDoc = [uuidv4(), id, docId];
-        await client.execute(queryInserirClienteDoc, parametrosClienteDoc, { prepare: true });
+        const parametrosInserirRg = [rgId, rg.numero, rg.emissao];
+        await client.execute(queryInserirRg, parametrosInserirRg, { prepare: true });
+  
+        const queryInserirClienteRg = `
+          INSERT INTO atlantis.cliente_rg (id, id_cliente, id_rg)
+          VALUES (?, ?, ?)
+        `;
+        const parametrosClienteRg = [uuidv4(), id, rgId];
+        await client.execute(queryInserirClienteRg, parametrosClienteRg, { prepare: true });
       }
     }
   }
@@ -359,18 +394,18 @@ async function atualizarCliente(id, nome, nomeSocial, nascimento, cadastro, docs
       if (telefone.id) {
         const queryAtualizarTelefone = `
           UPDATE atlantis.telefones
-          SET numero = ?
+          SET ddd = ?, numero = ?
           WHERE id = ?
         `;
-        const parametrosTelefone = [telefone.numero, telefone.id];
+        const parametrosTelefone = [telefone.ddd, telefone.numero, telefone.id];
         await client.execute(queryAtualizarTelefone, parametrosTelefone, { prepare: true });
       } else {
         const telefoneId = uuidv4();
         const queryInserirTelefone = `
-          INSERT INTO atlantis.telefones (id, numero)
-          VALUES (?, ?)
+          INSERT INTO atlantis.telefones (id, ddd, numero)
+          VALUES (?, ?, ?)
         `;
-        const parametrosInserirTelefone = [telefoneId, telefone.numero];
+        const parametrosInserirTelefone = [telefoneId, telefone.ddd, telefone.numero];
         await client.execute(queryInserirTelefone, parametrosInserirTelefone, { prepare: true });
   
         const queryInserirClienteTelefone = `
@@ -388,18 +423,18 @@ async function atualizarCliente(id, nome, nomeSocial, nascimento, cadastro, docs
       if (dependente.id) {
         const queryAtualizarDependente = `
           UPDATE atlantis.clientes
-          SET nome = ?, nome_social = ?, nascimento = ?, cadastro = ?, titular = ?
+          SET nome = ?, nome_social = ?, nascimento = ?, cpf = ?, passaporte = ?, titular = ?
           WHERE id = ?
         `;
-        const parametrosDependente = [dependente.nome, dependente.nome_social, dependente.nascimento, dependente.cadastro, dependente.titular, dependente.id];
+        const parametrosDependente = [dependente.nome, dependente.nome_social, dependente.nascimento, dependente.cpf, dependente.passaporte, dependente.titular, dependente.id];
         await client.execute(queryAtualizarDependente, parametrosDependente, { prepare: true });
       } else {
         const dependenteId = uuidv4();
         const queryInserirDependente = `
-          INSERT INTO atlantis.clientes (id, nome, nome_social, nascimento, cadastro, titular)
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO atlantis.clientes (id, nome, nome_social, nascimento, cpf, passaporte, titular)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
-        const parametrosInserirDependente = [dependenteId, dependente.nome, dependente.nome_social, dependente.nascimento, dependente.cadastro, dependente.titular];
+        const parametrosInserirDependente = [dependenteId, dependente.nome, dependente.nome_social, dependente.nascimento, dependente.cpf, dependente.passaporte, dependente.titular];
         await client.execute(queryInserirDependente, parametrosInserirDependente, { prepare: true });
   
         const queryInserirClienteDependente = `
@@ -465,10 +500,10 @@ async function main() {
   await criarTabelaClienteTelefone();
   await criarIndiceIdClienteTelefone();
   await criarIndiceClienteIdTelefone();
-  await criarTabelaDocs();
-  await criarTabelaClienteDoc();
-  await criarIndiceIdClienteDoc();
-  await criarIndiceClienteIdDoc();
+  await criarTabelaRgs();
+  await criarTabelaClienteRg();
+  await criarIndiceIdClienteRg();
+  await criarIndiceClienteIdRg();
   await criarTabelaEndereco();
   await criarIndiceEnderecoCliente();
   await criarTabelaAcomodacoes();
@@ -489,7 +524,7 @@ app.use(express.urlencoded({ extended: false }));
 app.post('/adicionar/cliente', async (req, res) => {
   try {
     const usuario = req.body;
-    await inserirUsuario(usuario.nome, usuario.nomeSocial, usuario.nascimento, usuario.cadastro, usuario.docs, usuario.telefones, usuario.dependentes, usuario.endereco);
+    await inserirUsuario(usuario.nome, usuario.nomeSocial, usuario.nascimento, usuario.cpf, usuario.passaporte, usuario.rgs, usuario.telefones, usuario.dependentes, usuario.endereco);
     res.status(200).send('Cliente inserido com sucesso!');
   } catch (error) {
     console.error('Erro ao inserir o cliente:', error);
@@ -527,10 +562,10 @@ app.put('/cliente', async (req, res) => {
 });
 
 app.put('/atualizar/cliente', async (req, res) => {
-  const { id, nome, nomeSocial, nascimento, cadastro, docs, telefones, dependentes, endereco } = req.body;
+  const { id, nome, nomeSocial, nascimento, cpf, passaporte, rgs, telefones, dependentes, endereco } = req.body;
 
   try {
-    await atualizarCliente(id, nome, nomeSocial, nascimento, cadastro, docs, telefones, dependentes, endereco);
+    await atualizarCliente(id, nome, nomeSocial, nascimento, cpf, passaporte, rgs, telefones, dependentes, endereco);
     res.status(200).json({ message: 'Cliente atualizado com sucesso' });
   } catch (error) {
     console.error(error);
@@ -548,16 +583,16 @@ app.delete('/deletar/cliente', async (req, res) => {
       return;
     }
 
-    const queryIdClienteDoc = 'SELECT id_doc FROM atlantis.cliente_doc WHERE id_cliente = ?';
-    const idClienteDocResult = await client.execute(queryIdClienteDoc, [id], { prepare: true });
-    const idsDoc = idClienteDocResult.rows.map(row => row.id_doc);
+    const queryIdClienteRg = 'SELECT id_rg FROM atlantis.cliente_rg WHERE id_cliente = ?';
+    const idClienteRgResult = await client.execute(queryIdClienteRg, [id], { prepare: true });
+    const idsRg = idClienteRgResult.rows.map(row => row.id_rg);
 
-    for (const idDoc of idsDoc) {
-      const queryExcluirClienteDocReferencia = 'DELETE FROM atlantis.cliente_doc WHERE id = ?';
-      await client.execute(queryExcluirClienteDocReferencia, [idDoc], { prepare: true });
+    for (const idRg of idsRg) {
+      const queryExcluirClienteRgReferencia = 'DELETE FROM atlantis.cliente_rg WHERE id = ?';
+      await client.execute(queryExcluirClienteRgReferencia, [idRg], { prepare: true });
 
-      const queryExcluirDoc = 'DELETE FROM atlantis.docs WHERE id = ?';
-      await client.execute(queryExcluirDoc, [idDoc], { prepare: true });
+      const queryExcluirRg = 'DELETE FROM atlantis.rgs WHERE id = ?';
+      await client.execute(queryExcluirRg, [idRg], { prepare: true });
     }
 
     const queryIdClienteTelefone = 'SELECT id_telefone FROM atlantis.cliente_telefone WHERE id_cliente = ?';
@@ -672,12 +707,19 @@ app.get('/acomodacao', async (req, res) => {
     const { id } = req.body;
 
     const querySelecionarAcomodacao = `
-      SELECT id, nome,
-        cama_solteiro, cama_casal,
-        suite, climatizacao, garagem
+      SELECT
+        id,
+        nome,
+        cama_solteiro,
+        cama_casal,
+        suite,
+        climatizacao,
+        garagem
       FROM
         atlantis.acomodacoes
-      WHERE id = ? `;
+      WHERE
+        id = ?
+    `;
     const parametros = [id];
     const resultado = await client.execute(querySelecionarAcomodacao, parametros, { prepare: true });
 
@@ -707,8 +749,11 @@ app.delete('/deletar/acomodacao', async (req, res) => {
     const { id } = req.body;
 
     const queryDeletarAcomodacao = `
-      DELETE FROM atlantis.acomodacoes
-      WHERE id = ? `;
+      DELETE FROM
+        atlantis.acomodacoes
+      WHERE
+        id = ?
+    `;
     const parametros = [id];
     const resultado = await client.execute(queryDeletarAcomodacao, parametros, { prepare: true });
 

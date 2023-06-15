@@ -15,6 +15,7 @@
     position: fixed;
     max-width: 600px;
     margin: 0 auto;
+    margin-left: 20%;
     padding: 5em 4em 4em 4em;
     background-color: #fff;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.562);
@@ -41,8 +42,6 @@
     margin-bottom: 0.5em;
     font-size: 1.5em;
     text-align: center;
-    color: #000;
-    margin-left: 0;
 }
 
 .conteudoModal .aviso{
@@ -50,35 +49,10 @@
     margin-bottom: 2em;
 }
 
-.button-color {
-    display: flex;
-    justify-content: center;
-}
-
-.button-color button {
-    margin: 10% 0%;
-    border: 0 none;
-    height: 5vh;
-    width: 12vw;
-    color: #fff;
-    cursor: pointer;
-}
-
-#red button {
+.button-red{
     background-color: #FF0000;
 }
 
-#red button:hover {
-    background-color: #eb0000;
-}
-
-#green button {
-    background-color: #16cf4d;
-}
-
-#green button:hover {
-    background-color: #06c740;
-}
 
 @media screen and (max-width: 700px) {
     

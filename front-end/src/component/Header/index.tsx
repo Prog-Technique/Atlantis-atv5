@@ -17,19 +17,24 @@ export default function Header() {
             <div className="menu">
 
                 <li className="services">
-                    <Link to="#" className="dropdownTitle">Cadastrar</Link>
+                    <Link to="#" className="dropdownTitle">Cliente</Link>
                     <ul className="dropdown">
-                        <li><Link to="/cadastrar_cliente">Cliente</Link></li>
-                        <li><Link to="/cadastrar_acomodacao">Acomodação</Link></li>
-                        <li><Link to="/vincular">Vinculação</Link></li>
+                        <li><Link to="/cadastrar/clientes">Cadastrar</Link></li>
+                        <li><Link to="/clientes">Listagem</Link></li>
                     </ul>
                 </li>
                 <li className="services">
-                    <Link to="#" className="dropdownTitle">Listagens</Link>
+                    <Link to="#" className="dropdownTitle">Acomodação</Link>
                     <ul className="dropdown">
-                        <li><Link to="/titular">Titulares</Link></li>
-                        <li><Link to="/dependente">Dependentes</Link></li>
-                        <li><Link to="/acomodacoes">Acomodações</Link></li>
+                        <li><Link to="/cadastrar/acomodacoes">Cadastrar</Link></li>
+                        <li><Link to="/acomodacoes">Listagem</Link></li>
+                    </ul>
+                </li>
+                <li className="services">
+                    <Link to="#" className="dropdownTitle">Locação</Link>
+                    <ul className="dropdown">
+                        <li><Link to="/alocar">Alocar cliente</Link></li>
+                        <li><Link to="/desalocar">Desalocar cliente</Link></li>
                     </ul>
                 </li>
             </div>
