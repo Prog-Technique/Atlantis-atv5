@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Axios from "axios";
 import Header from "../../../component/Header";
 import { toast } from 'react-toastify';
@@ -95,6 +95,8 @@ function CadastrarClientes() {
       .catch((error) => {
         console.log(error);
       });
+
+      
   }
 
   function addDependentes() {

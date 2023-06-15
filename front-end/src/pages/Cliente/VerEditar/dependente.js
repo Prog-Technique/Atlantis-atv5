@@ -1,7 +1,7 @@
-import { Button } from 'react-bootstrap';
 import Header from '../../../component/Header';
-import React, { useEffect, useState } from "react";
-import { GrFormAdd } from "react-icons/gr";
+import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
+import { FiArrowLeft, FiPlusCircle } from "react-icons/fi";
 
 export default function EditarDependentes() {
 
@@ -25,107 +25,78 @@ export default function EditarDependentes() {
     localStorage.setItem("cliente", JSON.stringify(cliente));
     window.location.href = '/cadastrar/clientes'
   }
-  
+
   return (
-    <section>
-      <header>
-        <Header />
-      </header>
-      <main>
-        <div className='text'>
-          <h1 className='margin-titulo'><strong>Ver e ou editar dependentes</strong></h1>
-        </div>
-        <div className="forms">
-          <form onSubmit={handleSubmit}>
+    <> <Header />
+      <div className="onTop">
+        <Link to="/ver/cliente">
+          <FiArrowLeft size={25} /></Link>
+        <h1>Ver/Editar dependente</h1>
+      </div>
+
+      <div className="container">
+        <form className="border" onSubmit={handleSubmit}>
+          <div className="content">
             {dependentes.map((dependente, index) => (
+              
               <div key={index}>
-                <div className="field">
-                  <label>Nome Completo:</label>
-                  <input
-                    placeholder='Insira o nome completo'
-                    type="text"
-                    value={dependente.nome}
+                <div className="input">
+                  <label>Nome</label>
+                  <input type="text" value={dependente.nome} required
                     onChange={(e) => {
                       const newDependentes = [...dependentes];
                       newDependentes[index].nome = e.target.value;
                       setDependentes(newDependentes);
-                    }}
-                    required
-                  />
+                    }} />
                 </div>
 
-                <div className="campo-duplo">
-                  <div className="field esquerda">
-                    <label>Nome social:</label>
-                    <input
-                      placeholder='Insira o nome social'
-                      type="text"
-                      value={dependente.nome_social}
-                      onChange={(e) => {
-                        const newDependentes = [...dependentes];
-                        newDependentes[index].nomeSocial = e.target.value;
-                        setDependentes(newDependentes);
-                      }}
-                      required
-                    />
-                  </div>
-                  <div className="field direita">
-                    <label>Nascimento:</label>
-                    <input
-                      type="date"
-                      value={dependente.nascimento}
-                      onChange={(e) => {
-                        const newDependentes = [...dependentes];
-                        newDependentes[index].nascimento = e.target.value;
-                        setDependentes(newDependentes);
-                      }}
-                      required
-                    />
-                  </div>
+                <div className="input">
+                  <label>Nome social</label>
+                  <input type="text" value={dependente.nome_social} required
+                    onChange={(e) => {
+                      const newDependentes = [...dependentes];
+                      newDependentes[index].nomeSocial = e.target.value;
+                      setDependentes(newDependentes);
+                    }} />
+                </div>
+                <div className="input">
+                  <label>Data de nascimento</label>
+                  <input type="date" value={dependente.nascimento} required
+                    onChange={(e) => {
+                      const newDependentes = [...dependentes];
+                      newDependentes[index].nascimento = e.target.value;
+                      setDependentes(newDependentes);
+                    }} />
                 </div>
 
-                <div className="campo-duplo">
-                  <div className="field esquerda">
-                    <label>CPF:</label>
-                    <input
-                      type="text"
-                      placeholder='XXX.XXX.XXX-XX'
-                      value={dependente.cpf}
-                      onChange={(e) => {
-                        const newDependentes = [...dependentes];
-                        newDependentes[index].cpf = e.target.value;
-                        setDependentes(newDependentes);
-                      }}
-                      required
-                    />
-                  </div>
-                  <div className="field direita">
-                    <label>Passaporte:</label>
-                    <input
-                      type="text"
-                      placeholder='XXX.XXX.XXX-XX'
-                      value={dependente.passaporte}
-                      onChange={(e) => {
-                        const newDependentes = [...dependentes];
-                        newDependentes[index].passaporte = e.target.value;
-                        setDependentes(newDependentes);
-                      }}
-                      required
-                    />
-                  </div>
+                <div className="input">
+                  <label>CPF</label>
+                  <input type="text" value={dependente.cpf} required
+                    onChange={(e) => {
+                      const newDependentes = [...dependentes];
+                      newDependentes[index].cpf = e.target.value;
+                      setDependentes(newDependentes);
+                    }} />
                 </div>
-                <br></br>
-                <br></br>
+                <div className="input">
+                  <label>Passaporte</label>
+                  <input type="text" value={dependente.passaporte} required
+                    onChange={(e) => {
+                      const newDependentes = [...dependentes];
+                      newDependentes[index].passaporte = e.target.value;
+                      setDependentes(newDependentes);
+                    }} />
+                </div>
               </div>
             ))}
-            <div className="btns">
-                <Button className="add add-green" variant="outline-dark"  type="button" onClick={() => window.location.href = '/ver/cliente'}>Voltar</Button>
-              <Button className="add add-green" variant="outline-dark" type="button" onClick={() => addDependente()}><GrFormAdd color='black' size={23}/> Dependentes</Button>
-              <Button className="add add-green" variant="outline-dark" type='submit'>Cadastrar dependentes</Button>{' '}
-            </div>
-          </form>
-        </div>
-      </main>
-    </section>
+            
+              <button type="button" onClick={() => addDependente()}>Adicionar outro</button>
+              <button type='submit'>SALVAR</button>
+            
+          </div>
+
+        </form>
+      </div>
+    </>
   )
 }

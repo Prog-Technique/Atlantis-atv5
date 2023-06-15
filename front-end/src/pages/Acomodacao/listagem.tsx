@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Table, Button } from 'react-bootstrap';
 import axios from 'axios';
-import NavBar_ from '../../component/Header';
-import { FiTrash } from "react-icons/fi";
+import Header from '../../component/Header';
+import { FiTrash2 } from "react-icons/fi";
 
-function Acomodacoes() {
+export default function Acomodacoes() {
   const [acomodacoes, setAcomodacoes] = useState([]);
 
   useEffect(() => {
@@ -17,60 +16,48 @@ function Acomodacoes() {
     axios.delete('http://localhost:3001/deletar/acomodacao', { data: { id } })
       .then((response) => {
         axios.get('http://localhost:3001/acomodacoes')
-        .then((response) => setAcomodacoes(response.data))
-        .catch((error) => console.log(error));
+          .then((response) => setAcomodacoes(response.data))
+          .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
   };
 
   return (
-    <section>
-      <header>
-        <NavBar_ />
-      </header>
+    <><Header />
       <main>
-        <div className='text'>
-          <h1 className="titles"> <strong> Acomodações </strong> </h1>
-        </div>
-        <div className="tables">
-          <Table striped bordered hover variant="light">
-            <thead className="titles-table">
+        <h1>Acomodações</h1>
+
+        <div className='container-table'>
+          <table>
+            <thead>
               <tr>
                 <th>Nome</th>
                 <th>Cama de solteiro</th>
-                <th>Cama casal</th>
+                <th>Cama de casal</th>
+                <th>Suíte</th>
                 <th>Climatização</th>
                 <th>Garagem</th>
-                <th>Suite</th>
-                <th>Apagar</th>
+                <th>Excluir</th>
               </tr>
             </thead>
             <tbody>
               {acomodacoes.map((acomodacao: any) => (
                 <tr key={acomodacao.id}>
-                  <td>{acomodacao.nome}</td>
-                  <td>{acomodacao.cama_solteiro}</td>
-                  <td>{acomodacao.cama_casal}</td>
-                  <td>{acomodacao.climatizacao ? 'Sim' : 'Não'}</td>
-                  <td>{acomodacao.garagem}</td>
-                  <td>{acomodacao.suite}</td>
-                  <td>
-                    <Button
-                      className="cps"
-                      id="transparente"
-                      onClick={() => handleDelete(acomodacao.id)}
-                    >
-                      <FiTrash color='red' size={23}/>
-                    </Button>
+                  <td data-label="Nome">{acomodacao.nome}</td>
+                  <td data-label="Cama de solteiro">{acomodacao.cama_solteiro}</td>
+                  <td data-label="Cama de casal">{acomodacao.cama_casal}</td>
+                  <td data-label="Suíte">{acomodacao.suite}</td>
+                  <td data-label="Climatização">{acomodacao.climatizacao ? 'Sim' : 'Não'}</td>
+                  <td data-label="Garagem">{acomodacao.garagem}</td>
+                  <td data-label="Excluir">
+                    <FiTrash2 onClick={() => handleDelete(acomodacao.id)} />
                   </td>
                 </tr>
               ))}
             </tbody>
-          </Table>
+          </table>
         </div>
       </main>
-    </section>
+    </>
   );
 }
-
-export default Acomodacoes;
