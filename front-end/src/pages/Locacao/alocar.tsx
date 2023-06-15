@@ -1,9 +1,8 @@
-import { Button, Table } from 'react-bootstrap';
-import NavBar_ from '../../../../component/Header';
-import React, { useEffect, useState } from "react";
+import Header from '../../component/Header';
+import { useEffect, useState } from "react";
 import Axios from "axios";
 import { toast } from 'react-toastify';
-import { RiHome4Line } from "react-icons/ri";
+import { MdLocationOn } from "react-icons/md";
 
 interface Cliente {
     id: number;
@@ -12,7 +11,7 @@ interface Cliente {
     titular: boolean;
 }
 
-function Alocar() {
+export default function Alocar() {
     const [clientes, setClientes] = useState<Cliente[]>([]);
 
     useEffect(() => {
@@ -32,21 +31,17 @@ function Alocar() {
 
     function handleSubmit(id: string) {
         localStorage.setItem("id_cliente", id);
-        window.location.href = '/amodacoes_disponiveis'
+        window.location.href = '/acomodacoes_disponiveis'
     }
 
     return (
-        <section>
-            <header>
-                <NavBar_ />
-            </header>
+        <><Header />
             <main>
-                <div className='text'>
-                    <h1 className="titles"> <strong> Alocar cliente </strong> </h1>
-                </div>
-                <div className="tables">
-                    <Table striped bordered hover variant="light">
-                        <thead  className="titles-table">
+                <h1>Alocar cliente</h1>
+
+                <div className='container-table'>
+                    <table>
+                        <thead>
                             <tr>
                                 <th>Nome</th>
                                 <th>CPF</th>
@@ -56,25 +51,17 @@ function Alocar() {
                         <tbody>
                             {clientesTitulares.map((cliente) => (
                                 <tr key={cliente.id}>
-                                    <td>{cliente.nome}</td>
-                                    <td>{cliente.cpf}</td>
-                                    <td>
-                                        <Button
-                                        className="cps"
-                                        id="transparente"
-                                        onClick={() => handleSubmit(cliente.id.toString())}
-                                        >
-                                            <RiHome4Line color='black' size={28}/>
-                                        </Button>
+                                    <td data-label="Nome">{cliente.nome}</td>
+                                    <td data-label="CPF">{cliente.cpf}</td>
+                                    <td data-label="Alocar">
+                                        <MdLocationOn onClick={() => handleSubmit(cliente.id.toString())} />
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
-                    </Table>
+                    </table>
                 </div>
             </main>
-        </section>
+        </>
     );
 }
-
-export default Alocar;

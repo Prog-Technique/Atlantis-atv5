@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Table, Button } from 'react-bootstrap';
 import axios from 'axios';
-import NavBar_ from '../../../../component/Header';
-import { LuCheck } from "react-icons/lu";
+import Header from '../../component/Header';
+import { GrMapLocation } from "react-icons/gr";
 
 interface Acomodacao {
     id: string;
@@ -15,7 +14,7 @@ interface Acomodacao {
     suite: number;
   }
 
-function AcomodacaoVazia() {
+  export default function AcomodacaoVazia() {
     const [acomodacoes, setAcomodacoes] = useState<Acomodacao[]>([]);
 
   useEffect(() => {
@@ -29,7 +28,7 @@ function AcomodacaoVazia() {
 
   const id_cliente = localStorage.getItem("id_cliente");
 
-  const handleAclocar = (id: string) => {
+  const handleAlocar = (id: string) => {
     const data = {
       clienteId: id_cliente,
       acomodacaoId: id
@@ -47,53 +46,41 @@ function AcomodacaoVazia() {
   };
 
   return (
-    <section>
-      <header>
-        <NavBar_ />
-      </header>
+    <><Header />
       <main>
-        <div className='text'>
-          <h1 className="titles"> <strong> Acomodação disponível </strong> </h1>
-        </div>
-        <div className="tables">
-          <Table striped bordered hover variant="light">
-            <thead className="titles-table">
+        <h1>Acomodações disponível</h1>
+
+        <div className='container-table'>
+          <table>
+            <thead>
               <tr>
                 <th>Nome</th>
                 <th>Cama de solteiro</th>
-                <th>Cama casal</th>
+                <th>Cama de casal</th>
+                <th>Suíte</th>
                 <th>Climatização</th>
                 <th>Garagem</th>
-                <th>Suite</th>
-                <th>Acomodar</th>
+                <th>Alocar</th>
               </tr>
             </thead>
             <tbody>
               {acomodacoes.map((acomodacao: any) => (
                 <tr key={acomodacao.id}>
-                  <td>{acomodacao.nome}</td>
-                  <td>{acomodacao.cama_solteiro}</td>
-                  <td>{acomodacao.cama_casal}</td>
-                  <td>{acomodacao.climatizacao ? 'Sim' : 'Não'}</td>
-                  <td>{acomodacao.garagem}</td>
-                  <td>{acomodacao.suite}</td>
-                  <td>
-                    <Button
-                      className="cps"
-                      id="transparente"
-                      onClick={() => handleAclocar(acomodacao.id)}
-                    >
-                      <LuCheck color='black' size={23}/>
-                    </Button>
+                  <td data-label="Nome">{acomodacao.nome}</td>
+                  <td data-label="Cama de solteiro">{acomodacao.cama_solteiro}</td>
+                  <td data-label="Cama de casal">{acomodacao.cama_casal}</td>
+                  <td data-label="Suíte">{acomodacao.suite}</td>
+                  <td data-label="Climatização">{acomodacao.climatizacao ? 'Sim' : 'Não'}</td>
+                  <td data-label="Garagem">{acomodacao.garagem}</td>
+                  <td data-label="Alocar">
+                    <GrMapLocation onClick={() => handleAlocar(acomodacao.id)} />
                   </td>
                 </tr>
               ))}
             </tbody>
-          </Table>
+          </table>
         </div>
       </main>
-    </section>
+    </>
   );
 }
-
-export default AcomodacaoVazia;

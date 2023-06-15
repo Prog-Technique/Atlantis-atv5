@@ -43,7 +43,7 @@ export default function Clientes() {
 
   function verCliente(id: string) {
     localStorage.setItem("id_cliente", id);
-    window.location.href = '/ver/cliente'
+    window.location.href = '/ver_editar_titular'
   }
 
   return (

@@ -48,7 +48,7 @@ export default function CadastrarAcomodacoes() {
   return (
     <> <Header />
     <div className='onTop'>
-      <h1>Cadastrar acomodação</h1>
+      <h1>Cadastro de acomodação</h1>
     </div>
 
       <div className="container">

@@ -1,8 +1,7 @@
-import { Button, Table } from 'react-bootstrap';
-import NavBar_ from '../../../../component/Header'
-import React, { useEffect, useState } from "react";
+import Header from '../../component/Header'
+import { useEffect, useState } from "react";
 import Axios from "axios";
-import { LuClipboardX } from "react-icons/lu";
+import { MdLocationOff } from "react-icons/md";
 
 interface Cliente {
     id: string;
@@ -14,7 +13,7 @@ interface Cliente {
     titular: boolean;
 }
 
-function Desalocar() {
+export default function Desalocar() {
     const [clientesAlocados, setClientesAlocados] = useState<Cliente[]>([]);
     const [atualizarClientesAlocados, setAtualizarClientesAlocados] = useState(false);
 
@@ -44,17 +43,13 @@ function Desalocar() {
     }
 
     return (
-        <section>
-            <header>
-                <NavBar_ />
-            </header>
+        <><Header />
             <main>
-                <div className='text'>
-                    <h1 className="titles"> <strong> Desalocar cliente </strong> </h1>
-                </div>
-                <div className="tables">
-                    <Table striped bordered hover variant="light">
-                        <thead className="titles-table">
+                <h1>Desalocar cliente</h1>
+
+                <div className='container-table'>
+                    <table>
+                        <thead>
                             <tr>
                                 <th>Nome</th>
                                 <th>CPF</th>
@@ -64,25 +59,17 @@ function Desalocar() {
                         <tbody>
                             {clientesAlocados.filter(cliente => cliente.titular).map(cliente => (
                                 <tr key={cliente.id}>
-                                    <td>{cliente.nome}</td>
-                                    <td>{cliente.cpf}</td>
-                                    <td>
-                                        <Button
-                                            className="cps"
-                                            id="transparente"
-                                            onClick={() => handleSubmit(cliente.id)}
-                                        >
-                                            <LuClipboardX color='black' size={28} />
-                                        </Button>
+                                    <td data-label="Nome">{cliente.nome}</td>
+                                    <td data-label="CPF">{cliente.cpf}</td>
+                                    <td data-label="Desalocar">
+                                        <MdLocationOff onClick={() => handleSubmit(cliente.id)} />
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
-                    </Table>
+                    </table>
                 </div>
             </main>
-        </section>
+        </>
     );
 }
-
-export default Desalocar;

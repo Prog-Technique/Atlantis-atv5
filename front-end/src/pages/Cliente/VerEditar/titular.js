@@ -1,11 +1,11 @@
-import Header from '../../../component/Header'
 import { useEffect, useState } from "react";
 import Axios from "axios";
+import Header from '../../../component/Header'
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiArrowLeft, FiPlusCircle } from "react-icons/fi";
 
-export default function VerCliente() {
+export default function VerEditarTitular() {
   const [nome, setNome] = useState('');
   const [nome_social, setNomeSocial] = useState('');
   const [data_nasc, setData_nasc] = useState('');
@@ -123,7 +123,7 @@ export default function VerCliente() {
 
     localStorage.setItem("cliente", JSON.stringify(clienteData))
 
-    window.location.href = '/ver/dependentes'
+    window.location.href = '/ver_editar_dependente'
   }
 
 

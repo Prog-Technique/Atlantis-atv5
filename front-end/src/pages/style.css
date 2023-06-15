@@ -4,6 +4,10 @@ h1{
     text-align: center;
 }
 
+svg {
+    font-size: 22px;
+}
+
 .container {
     display: flex;
     flex-direction: row;

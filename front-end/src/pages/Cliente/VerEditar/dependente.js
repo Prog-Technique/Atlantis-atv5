@@ -1,9 +1,9 @@
-import Header from '../../../component/Header';
 import { useEffect, useState } from "react";
+import Header from '../../../component/Header';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiPlusCircle } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 
-export default function EditarDependentes() {
+export default function VerEditarDependente() {
 
   const [dependentes, setDependentes] = useState([{}]);
 
@@ -23,13 +23,13 @@ export default function EditarDependentes() {
     var cliente = JSON.parse(localStorage.getItem("cliente"))
     cliente.dependentes = dependentes
     localStorage.setItem("cliente", JSON.stringify(cliente));
-    window.location.href = '/cadastrar/clientes'
+    window.location.href = '/cadastrar_titular'
   }
 
   return (
     <> <Header />
       <div className="onTop">
-        <Link to="/ver/cliente">
+        <Link to="/ver_editar_titular">
           <FiArrowLeft size={25} /></Link>
         <h1>Ver/Editar dependente</h1>
       </div>

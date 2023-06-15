@@ -4,7 +4,7 @@ import Header from "../../../component/Header";
 import { toast } from 'react-toastify';
 import { FiPlusCircle } from "react-icons/fi";
 
-function CadastrarClientes() {
+export default function CadastraTitular() {
   const [nome, setNome] = useState('');
   const [nome_social, setNomeSocial] = useState('');
   const [data_nasc, setData_nasc] = useState('');
@@ -122,7 +122,7 @@ function CadastrarClientes() {
 
     localStorage.setItem("cliente", JSON.stringify(clienteData))
 
-    window.location.href = '/cadastrar/dependentes'
+    window.location.href = '/cadastrar_dependente'
   }
 
 
@@ -273,5 +273,3 @@ function CadastrarClientes() {
     </>
   );
 }
-
-export default CadastrarClientes;

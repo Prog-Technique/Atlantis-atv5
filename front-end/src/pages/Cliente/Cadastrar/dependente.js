@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../../component/Header";
-import { FiArrowLeft, FiPlusCircle } from "react-icons/fi";
 import { Link } from 'react-router-dom';
+import { FiArrowLeft } from "react-icons/fi";
 
-export default function AddDependentes() {
+export default function CadastraDependentes() {
 
   const [dependentes, setDependentes] = useState([{}]);
 
@@ -23,13 +23,13 @@ export default function AddDependentes() {
     var cliente = JSON.parse(localStorage.getItem("cliente"))
     cliente.dependentes = dependentes
     localStorage.setItem("cliente", JSON.stringify(cliente));
-    window.location.href = '/cadastrar/clientes'
+    window.location.href = '/cadastrar_titular'
   }
 
   return (
     <> <Header />
       <div className="onTop">
-        <Link to="/cadastrar/clientes">
+        <Link to="/cadastrar_titular">
           <FiArrowLeft size={25} /></Link>
         <h1>Cadastro de cliente</h1>
         <h2>Dados do dependente</h2>
