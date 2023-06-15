@@ -1,0 +1,139 @@
+h1{
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5em;
+    height: auto;
+}
+
+.border {
+    margin-top: 5%;
+    padding: 45px 100px;
+    box-shadow: 1px 1px 10px #4c4c4c;
+    display: flex;
+    flex-direction: row;
+    gap: 5em;
+}
+
+.inRow {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    gap: 2em;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.input input, .opcoes select, .input select {
+    padding: 5px;
+    font-size: .9em;
+}
+
+.opcoes select {
+    padding-right: 50px;
+}
+
+.content button {
+    background-color: #00a8cb;
+    margin: 10% 0%;
+    border: 0 none;
+    height: 5vh;
+    width: 12vw;
+    color: #fff;
+    cursor: pointer;
+}
+
+.content button:hover {
+    background-color: #337ab7;
+}
+
+.home {
+    text-align: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.home span{
+    background: #FFFFFF url("../assets/parque.png") 
+    no-repeat center fixed;
+    height: 59vh;
+}
+
+.home h1 {
+    font-size: 2em;
+    text-shadow: 4px 3px 10px #337ab7;
+}
+
+.home p {
+    font-size: 1.5em;
+    text-shadow: 2px 1px 1px #337ab7;
+    margin-left: 0;
+}
+
+.onTop a{
+    margin: 2% 0 0 25%;
+}
+
+.onTop h1, .onTop h2, .onTop h4 {
+    text-align: center;
+}
+
+.onTop h1 {
+    margin-top: 2%;
+}
+
+.plusCircle {
+    display: flex;
+    align-self: center;
+}
+
+/* ------------------------------------------- */
+
+@media (max-width: 600px){
+
+    .container {
+        margin-bottom: 15%;
+    }
+
+    .border {
+        flex-direction: column;
+        gap: 0;
+        padding: 45px 25px 30px 25px;
+    }
+
+    .content button {
+        width: 63vw;
+        font-size: 1.2em;
+    }
+
+    .input input, .opcoes select, .input select {
+        width: 60vw;
+        font-size: 1.1em;
+    }
+
+    label {
+        font-size: 1.1em;
+    }
+
+    .plusCircle {
+        height: 30px;
+        width: 30px;
+    }
+
+    
+}
