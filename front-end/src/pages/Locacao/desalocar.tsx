@@ -1,5 +1,5 @@
 import Header from '../../component/Header'
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Axios from "axios";
 import { MdLocationOff } from "react-icons/md";
 
@@ -51,7 +51,7 @@ export default function Desalocar() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Nome</th>
+                                <th className="largura-dobrada">Nome</th>
                                 <th>CPF</th>
                                 <th>Desalocar</th>
                             </tr>
@@ -59,7 +59,7 @@ export default function Desalocar() {
                         <tbody>
                             {clientesAlocados.filter(cliente => cliente.titular).map(cliente => (
                                 <tr key={cliente.id}>
-                                    <td data-label="Nome">{cliente.nome}</td>
+                                    <td data-label="Nome" className="largura-dobrada">{cliente.nome}</td>
                                     <td data-label="CPF">{cliente.cpf}</td>
                                     <td data-label="Desalocar">
                                         <MdLocationOff onClick={() => handleSubmit(cliente.id)} />

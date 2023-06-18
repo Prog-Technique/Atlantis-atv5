@@ -8,7 +8,7 @@ export default function CadastrarAcomodacoes() {
   const [suite, setSuite] = useState('');
   const [solteiro, setSolteiro] = useState('');
   const [casal, setCasal] = useState('');
-  const [Climatização, setClimatizacao] = useState('');
+  const [climatizacao, setClimatizacao] = useState('');
   const [garagem, setGaragem] = useState('');
 
   let clearAreas = () => {
@@ -27,8 +27,9 @@ export default function CadastrarAcomodacoes() {
       cama_solteiro: solteiro,
       cama_casal: casal,
       suite: suite,
-      climatizacao: Climatização,
-      garagem: garagem
+      climatizacao: climatizacao,
+      garagem: garagem,
+      disponivel: true
     };
 
     axios.post('http://localhost:3001/adicionar/acomodacao', data)
@@ -40,8 +41,6 @@ export default function CadastrarAcomodacoes() {
         toast.error('Erro ao cadastrar acomodação.');
         console.error(error);
       });
-
-      window.location.reload()
   }
 
 
@@ -62,12 +61,12 @@ export default function CadastrarAcomodacoes() {
 
             <div className="input">
               <label>Camas de solteiro</label>
-              <input type="number" onChange={(e) => setSolteiro(e.target.value)} />
+              <input type="number" value={solteiro} onChange={(e) => setSolteiro(e.target.value)} />
             </div>
 
             <div className="input">
               <label>Camas de casal</label>
-              <input type="number" onChange={(e) => setCasal(e.target.value)} />
+              <input type="number" value={casal} onChange={(e) => setCasal(e.target.value)} />
             </div>
 
             <div className="input">
@@ -76,12 +75,13 @@ export default function CadastrarAcomodacoes() {
             </div>
 
             <div className="input">
-              <label>Climatização</label>
-              <input placeholder='True | False' type="boolean" onChange={(e) => setClimatizacao(e.target.value)} />
+              <label>climatizacao</label>
+              <input placeholder='True | False' type="boolean" value={climatizacao}
+              onChange={(e) => setClimatizacao(e.target.value)} />
             </div>
             <div className="input">
               <label>Garagem</label>
-              <input type="number" onChange={(e) => setGaragem(e.target.value)} />
+              <input type="number" value={garagem} onChange={(e) => setGaragem(e.target.value)} />
             </div>
 
             <button type='submit'>ENVIAR</button>

@@ -1,5 +1,5 @@
 import Header from '../../component/Header';
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Axios from "axios";
 import { toast } from 'react-toastify';
 import { MdLocationOn } from "react-icons/md";
@@ -43,7 +43,7 @@ export default function Alocar() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Nome</th>
+                                <th className="largura-dobrada">Nome</th>
                                 <th>CPF</th>
                                 <th>Alocar</th>
                             </tr>
@@ -51,7 +51,7 @@ export default function Alocar() {
                         <tbody>
                             {clientesTitulares.map((cliente) => (
                                 <tr key={cliente.id}>
-                                    <td data-label="Nome">{cliente.nome}</td>
+                                    <td data-label="Nome" className="largura-dobrada">{cliente.nome}</td>
                                     <td data-label="CPF">{cliente.cpf}</td>
                                     <td data-label="Alocar">
                                         <MdLocationOn onClick={() => handleSubmit(cliente.id.toString())} />

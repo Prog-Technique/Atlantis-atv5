@@ -679,8 +679,8 @@ app.post('/adicionar/acomodacao', async (req, res) => {
     const acomodacao = req.body;
     const id = uuidv4();
 
-    const query = 'INSERT INTO atlantis.acomodacoes (id, nome, cama_solteiro, cama_casal, suite, climatizacao, garagem) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const parametros = [id, acomodacao.nome, acomodacao.cama_solteiro, acomodacao.cama_casal, acomodacao.suite, acomodacao.climatizacao, acomodacao.garagem];
+    const query = 'INSERT INTO atlantis.acomodacoes (id, nome, cama_solteiro, cama_casal, suite, climatizacao, garagem, disponivel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const parametros = [id, acomodacao.nome, acomodacao.cama_solteiro, acomodacao.cama_casal, acomodacao.suite, acomodacao.climatizacao, acomodacao.garagem, acomodacao.disponivel];
     await client.execute(query, parametros, { prepare: true });
 
     res.json({ message: 'Acomodação adicionada com sucesso' });

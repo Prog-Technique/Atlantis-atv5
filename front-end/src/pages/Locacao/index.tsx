@@ -20,6 +20,7 @@ interface Acomodacao {
   useEffect(() => {
     axios.get<Acomodacao[]>('http://localhost:3001/acomodacoes')
       .then((response) => {
+        console.log(response.data);
         const acomodacoesDisponiveis = response.data.filter((acomodacao) => acomodacao.disponivel);
         setAcomodacoes(acomodacoesDisponiveis);
       })
